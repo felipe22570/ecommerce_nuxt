@@ -8,10 +8,27 @@
         </h3>
         <p class="product-description">{{ f.description }}</p>
         <p class="product-price">${{ f.price }}</p>
-        <button @click="addProduct(f)">Add to cart</button>
+        <button @click="addProductToCart(f), showAlertSaved(f.title)">
+          Add to cart
+          {{
+            cart.some((c) => c.title === f.title)
+              ? "( " + getCantInCart(f.title) + " )"
+              : ""
+          }}
+        </button>
       </div>
     </div>
     <!-- TODO: Add to component -->
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="2000"
+      :value="true"
+      color="#008b8b"
+      fixed
+      right
+    >
+      <strong>Product added to cart successfully!</strong>
+    </v-snackbar>
   </div>
 </template>
 
@@ -26,17 +43,41 @@ export default {
   computed: {
     ...mapGetters({
       filteredProducts: "products/getFilteredProducts",
+      cart: "cart/getCart",
+      alertSaved: "cart/getAlertSaved",
     }),
+  },
+  data() {
+    return {
+      snackbar: false,
+    };
   },
   methods: {
     ...mapActions({
       filterProductsByCategory: "products/filterProductsByCategory",
       setProductToCart: "cart/setProductToCart",
+      addProductToCart: "cart/addProductToCart",
     }),
 
     ...mapMutations({
       addProduct: "cart/addProduct",
     }),
+
+    getCantInCart(value) {
+      const cartItem = this.cart.find((c) => c.title === value);
+
+      return cartItem.cant;
+    },
+
+    showAlertSaved(value) {
+      const productInCart = this.cart.find((c) => c.title === value);
+
+      if (productInCart && productInCart.cant < 2) {
+        setTimeout(() => {
+          this.snackbar = true;
+        }, 100);
+      }
+    },
   },
   created() {
     this.filterProductsByCategory(this.$route.params.slug);

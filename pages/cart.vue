@@ -5,9 +5,9 @@
       <div class="cart-product">
         <h3>{{ product.title }}</h3>
         <div class="cart-product-cant">
-          <button @click="reduceCant(product)">-</button>
+          <button @click="reduceCant(product.title)">-</button>
           <span>{{ product.cant }}</span>
-          <button @click="addCant(product)">+</button>
+          <button @click="addCant(product.title)">+</button>
         </div>
         <span class="price">${{ product.price }}</span>
         <span class="delete" @click="deleteProduct(product.id)">Del</span>

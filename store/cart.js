@@ -2,14 +2,14 @@ export const state = () => ({
   cart: [],
 });
 
-export const actions = {};
-
-export const mutations = {
-  addProduct(state, payload) {
-    const isProductSaved = state.cart.some((c) => c.title === payload.title);
+export const actions = {
+  addProductToCart(ctx, payload) {
+    const isProductSaved = ctx.state.cart.some(
+      (c) => c.title === payload.title
+    );
 
     if (isProductSaved) {
-      alert("Product is already in cart");
+      ctx.commit("addCant", payload.title);
     } else {
       const { id, title, price } = payload;
 
@@ -20,29 +20,39 @@ export const mutations = {
         inicialPrice: price,
         cant: 1,
       };
-      state.cart = [...state.cart, product];
+
+      ctx.commit("addProduct", product);
     }
+  },
+};
+
+export const mutations = {
+  addProduct(state, payload) {
+    state.cart = [...state.cart, payload];
   },
 
   addCant(state, payload) {
-    payload.cant++;
-    payload.price = payload.inicialPrice * payload.cant;
+    const productToEdit = state.cart.find((c) => c.title === payload);
+
+    productToEdit.cant++;
+    productToEdit.price = productToEdit.inicialPrice * productToEdit.cant;
 
     const newCart = state.cart.map((c) =>
-      c.title === payload.title ? payload : c
+      c.title === productToEdit.title ? productToEdit : c
     );
 
     state.cart = newCart;
   },
 
   reduceCant(state, payload) {
-    if (payload.cant > 1) {
-      payload.cant--;
+    const productToEdit = state.cart.find((c) => c.title === payload);
 
-      payload.price = payload.inicialPrice * payload.cant;
+    if (productToEdit.cant > 1) {
+      productToEdit.cant--;
+      productToEdit.price = productToEdit.inicialPrice * productToEdit.cant;
 
       const newCart = state.cart.map((c) =>
-        c.title === payload.title ? payload : c
+        c.title === productToEdit.title ? productToEdit : c
       );
 
       state.cart = newCart;

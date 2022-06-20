@@ -10,5 +10,8 @@ import NavbarVue from "~/components/Navbar.vue";
 export default { components: { NavbarVue } };
 </script>
 
-<style>
+<style lang="sass">
+$color-pack: false
+
+@import '~vuetify/src/styles/main.sass'
 </style>
