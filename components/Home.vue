@@ -1,7 +1,8 @@
 <template>
   <main>
     <h1>The best products at the best price!</h1>
-    <div class="category-list">
+    <div v-if="isLoading">Loading...</div>
+    <div v-else class="category-list">
       <nuxt-link
         :to="'/categories/' + category.id"
         class="category"
@@ -25,17 +26,16 @@ export default {
   computed: {
     ...mapGetters({
       categories: "categories/getCategories",
+      isLoading: "categories/getIsLoading",
     }),
   },
   methods: {
     ...mapActions({
       fetchCategories: "categories/fetchCategories",
-      // fetchProducts: "products/fetchProducts",
     }),
   },
   mounted() {
     this.fetchCategories();
-    // this.fetchProducts();
   },
 };
 </script>

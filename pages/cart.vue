@@ -13,7 +13,7 @@
         <span class="delete" @click="deleteProduct(product.id)">Del</span>
       </div>
     </div>
-    <span class="cart-price">Total: ${{ getTotalPrice }}</span>
+    <span class="cart-price">Total: ${{ totalAmount }}</span>
   </div>
 </template>
 
@@ -25,17 +25,8 @@ export default {
   computed: {
     ...mapGetters({
       cart: "cart/getCart",
+      totalAmount: "cart/getTotalAmount",
     }),
-
-    getTotalPrice() {
-      let total = 0;
-
-      this.cart.forEach((c) => {
-        total = total + Number(c.price);
-      });
-
-      return total;
-    },
   },
   methods: {
     ...mapMutations({
