@@ -1,34 +1,37 @@
 <template>
-  <div class="products">
-    <div class="product" v-for="f of filteredProducts" :key="f.id">
-      <img :src="f.images[0]" alt="" />
-      <div class="product-info">
-        <h3 class="product-title">
-          {{ f.title }}
-        </h3>
-        <p class="product-description">{{ f.description }}</p>
-        <p class="product-price">${{ f.price }}</p>
-        <button @click="addProductToCart(f), showAlertSaved(f.title)">
-          Add to cart
-          {{
-            cart.some((c) => c.title === f.title)
-              ? "( " + getCantInCart(f.title) + " )"
-              : ""
-          }}
-        </button>
+  <div>
+    <div v-if="isLoading">Loading...</div>
+    <div v-else class="products">
+      <div class="product" v-for="f of filteredProducts" :key="f.id">
+        <img :src="f.images[0]" alt="" />
+        <div class="product-info">
+          <h3 class="product-title">
+            {{ f.title }}
+          </h3>
+          <p class="product-description">{{ f.description }}</p>
+          <p class="product-price">${{ f.price }}</p>
+          <button @click="addProductToCart(f), showAlertSaved(f.title)">
+            Add to cart
+            {{
+              cart.some((c) => c.title === f.title)
+                ? "( " + getCantInCart(f.title) + " )"
+                : ""
+            }}
+          </button>
+        </div>
       </div>
+      <!-- TODO: Add to component -->
+      <v-snackbar
+        v-model="snackbar"
+        :timeout="2000"
+        :value="true"
+        color="#008b8b"
+        fixed
+        right
+      >
+        <strong>Product added to cart successfully!</strong>
+      </v-snackbar>
     </div>
-    <!-- TODO: Add to component -->
-    <v-snackbar
-      v-model="snackbar"
-      :timeout="2000"
-      :value="true"
-      color="#008b8b"
-      fixed
-      right
-    >
-      <strong>Product added to cart successfully!</strong>
-    </v-snackbar>
   </div>
 </template>
 
@@ -45,6 +48,7 @@ export default {
       filteredProducts: "products/getFilteredProducts",
       cart: "cart/getCart",
       alertSaved: "cart/getAlertSaved",
+      isLoading: "products/getIsLoading",
     }),
   },
   data() {
@@ -80,7 +84,7 @@ export default {
     },
   },
   created() {
-    this.filterProductsByCategory(this.$route.params.slug);
+    this.filterProductsByCategory(this.slug);
   },
 };
 </script>

@@ -70,5 +70,12 @@ export const getters = {
   getCart(state) {
     return state.cart;
   },
-  getTotalAmount(state) {},
+  getTotalAmount(state) {
+    const totalAmount = state.cart.reduce(
+      (sum, product) => (sum += product.price),
+      0
+    );
+
+    return totalAmount;
+  },
 };
